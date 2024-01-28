@@ -10,7 +10,7 @@ jobs:
 
   build:
 
-    runs-on: ip-10-16-55-45
+    runs-on: self-hosted
 
     steps:
     - name: Pull Docker image

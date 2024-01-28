@@ -5,11 +5,10 @@ const app = express()
 
 
 
-
 app.get('/', (req, res) => {
     res.json({
     
-        message: "hello welcome to trichy!!"
+        message: "hello welcome to chennai!!"
     })
 })
 
