@@ -1,7 +1,7 @@
 # CICD Devops
-Basic directory structure
- |----Dockerfile
- |----app.py
- |----.github-cicd.yml
- |----requirements.txt
+1. Basic directory structure
+2. |----Dockerfile
+3. |----app.py
+4. |----.github-cicd.yml
+5. |----requirements.txt
 
