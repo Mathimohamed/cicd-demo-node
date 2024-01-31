@@ -8,7 +8,7 @@ const app = express()
 app.get('/', (req, res) => {
     res.json({
     
-        message: "hello welcome to chennai!!"
+        message: "hello welcome to trichy!!"
     })
 })
 
