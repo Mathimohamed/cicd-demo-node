@@ -4,7 +4,7 @@ Basic directory structure
 2. |----server.js
 4. |----.github-cicd.yml
 5. |----node-modules
-   Make the node application run locally using node server.js Tested the root  from the browser and got the expected response
+Make the node application run locally using node server.js Tested the root  from the browser and got the expected response
    ![Screenshot (7)](https://github.com/Mathimohamed/cicd-demo-node/assets/151551076/9f34b652-d176-4c3e-b033-417aa4d04aea)
 
 
@@ -39,7 +39,36 @@ sudo systemctl start docker.service
 sudo systemctl status docker.service
 sudo usermod -a -G docker ec2-user
 sudo chmod 666 /var/run/docker.sock
+# CI/CD Implementation: Implement a Continuous Integration/Continuous Deployment (CI/CD) pipeline using Github Actions CI/CD.
+name: CICD
 
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: [ubuntu-latest]
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v3
+      - name: Login to docker hub
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }} 
+      - name: Build docker image
+        run: docker build -t mathimohamed/pipeline-cicd .
+      - name: Publish image to docker hub
+        run: docker push mathimohamed/pipeline-cicd:latest
+        
+  deploy:
+    needs: build
+    runs-on: [aws-ec2]
+    steps:
+      - name: Pull image from docker hub
+        run: docker pull mathimohamed/pipeline-cicd:latest
+      - name: Delete old container
+        run: docker rm -f pipeline-cicd-container
+      - name: Run docker container
+        run: docker run -d -p 3000:3000 --name pipeline-cicd-container mathimohamed/pipeline-cicd
 
 
 
