@@ -27,6 +27,18 @@ Basic directory structure
     CMD [ "node", "server.js" ]
 7.Userdata to setup and configure the docker
 This script updates the system, installs Docker, starts the Docker service, adds the user to the Docker group, and adjusts permissions for Docker access. It's designed for an environment where Docker is being set up on an Amazon EC2 instance.
+#!/bin/bash -xe
+
+sudo su
+
+sudo yum update
+sudo yum install docker -y
+sudp systemctl enable docker.service
+sudo systemctl start docker.service
+sudo systemctl status docker.service
+sudo usermod -a -G docker ec2-user
+sudo chmod 666 /var/run/docker.sock
+
 
 
 
