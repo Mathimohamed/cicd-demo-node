@@ -4,7 +4,8 @@ Basic directory structure
 2. |----server.js
 4. |----.github-cicd.yml
 5. |----node-modules
-  ## Make the node application run locally using node server.js Tested the root  from the browser and got the expected response
+   Make the node application run locally using node server.js Tested the root  from the browser and got the expected response
+   ![Screenshot (7)](https://github.com/Mathimohamed/cicd-demo-node/assets/151551076/9f34b652-d176-4c3e-b033-417aa4d04aea)
 
 
 
