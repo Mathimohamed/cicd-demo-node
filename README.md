@@ -18,14 +18,14 @@ Basic directory structure
 
 
    # Dockerization: Dockerize the Node js application
-   6. Dockerfile is used to create a docker container and consists of
-    FROM node:16
-    WORKDIR /usr/src/app
-    COPY package*.json ./
-    RUN npm install
-    COPY . .
-    EXPOSE 3000
-    CMD [ "node", "server.js" ]
+     Dockerfile is used to create a docker container and consists of
+   6 FROM node:16
+   7 WORKDIR /usr/src/app
+   8 COPY package*.json ./
+   9 RUN npm install
+  10 COPY . .
+  11 EXPOSE 3000
+  12 CMD [ "node", "server.js" ]
   Used node 16 version and chose rc-slim in order to reduce the size of the docker images. This can help us deploy the docker image faster. Created a working directory as 
 ‘/node-docker’. Copied only node-modules because docker images are built layer by layer. Whenever the bottom layer gets changed, all the layers above them are rebuilt. So, 
  application code changes often however, dependencies won't change much. Moreover, building the dependencies takes more time during the building process. Downloading and 
