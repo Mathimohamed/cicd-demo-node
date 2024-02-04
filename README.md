@@ -2,13 +2,14 @@
 
 Basic directory structure
 
- 
- |----Dockerfile
- |----server.js
- |----.github-cicd.yml
- |----node-modules
+|----Dockerfile
+|----server.js
+|----.github-cicd.yml
+|----node-modules
 
 Make the flask application run locally using node server.js Tested the root  from the browser and got the expected response
+
+![Screenshot (7)](https://github.com/Mathimohamed/cicd-demo-node/assets/151551076/9f34b652-d176-4c3e-b033-417aa4d04aea)
 
 
 
