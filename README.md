@@ -1,7 +1,6 @@
 # CICD Devops Task
 
 Basic directory structure
-
 |----Dockerfile
 |----server.js
 |----.github-cicd.yml
@@ -36,8 +35,7 @@ Used node 16 version and chose rc-slim in order to reduce the size of the docker
 
 
 
-# CI/CD Implementation: Implement a Continuous Integration/Continuous Deployment (CI/CD) pipeline using Gitlab CI/CD.
-# CI/CD configuration automates the building and deployment of a Docker image. The image is built, tagged, and pushed to AWS ECR in the 'build' stage. In the 'deploy' stage, it connects to an EC2 instance, pulls the latest image, and runs a Docker container.
+# CI/CD Implementation: Implement a Continuous Integration/Continuous Deployment (CI/CD) pipeline using Github action CI/CD.
 
        name: CICD
 
@@ -68,3 +66,4 @@ jobs:
         run: docker rm -f pipeline-cicd-container
       - name: Run docker container
         run: docker run -d -p 3000:3000 --name pipeline-cicd-container mathimohamed/pipeline-cicd
+        
