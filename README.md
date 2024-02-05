@@ -1,5 +1,4 @@
 # CICD Devops Task
-![Uploading image.png…]()
 
 Basic directory structure
 - Dockerfile
@@ -38,7 +37,7 @@ Used node 16 version and chose rc-slim in order to reduce the size of the docker
 
 # CI/CD Implementation: Implement a Continuous Integration/Continuous Deployment (CI/CD) pipeline using Github action CI/CD.
 
-    name: CICD
+name: CICD
 
 on:
 push:
@@ -48,23 +47,23 @@ jobs:
 build:
 runs-on: [ubuntu-latest]
 steps:
- - name: Checkout source
-        uses: actions/checkout@v3
-      - name: Login to docker hub
-        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }} 
-      - name: Build docker image
-        run: docker build -t mathimohamed/pipeline-cicd .
-      - name: Publish image to docker hub
-        run: docker push mathimohamed/pipeline-cicd:latest
+name: Checkout source
+uses: actions/checkout@v3
+name: Login to docker hub
+run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }} 
+name: Build docker image
+run: docker build -t mathimohamed/pipeline-cicd .
+name: Publish image to docker hub
+run: docker push mathimohamed/pipeline-cicd:latest
         
-  deploy:
-    needs: build
-    runs-on: [aws-ec2]
-    steps:
-      - name: Pull image from docker hub
-        run: docker pull mathimohamed/pipeline-cicd:latest
-      - name: Delete old container
-        run: docker rm -f pipeline-cicd-container
-      - name: Run docker container
-        run: docker run -d -p 3000:3000 --name pipeline-cicd-container mathimohamed/pipeline-cicd
+deploy:
+needs: build
+runs-on: [aws-ec2]
+steps:
+name: Pull image from docker hub
+run: docker pull mathimohamed/pipeline-cicd:latest
+name: Delete old container
+run: docker rm -f pipeline-cicd-container
+name: Run docker container
+run: docker run -d -p 3000:3000 --name pipeline-cicd-container mathimohamed/pipeline-cicd
         
