@@ -1,10 +1,10 @@
 # CICD Devops Task
 
 Basic directory structure
-|----Dockerfile
-|----server.js
-|----.github-cicd.yml
-|----node-modules
+- Dockerfile
+- server.js
+- .github-cicd.yml
+- node-modules
 
 Make the flask application run locally using node server.js Tested the root  from the browser and got the expected response
 
