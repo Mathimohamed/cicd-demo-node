@@ -38,57 +38,31 @@ Used node 16 version and chose rc-slim in order to reduce the size of the docker
 
 # CI/CD Implementation: Implement a Continuous Integration/Continuous Deployment (CI/CD) pipeline using Github action CI/CD.
 
-        image: docker:latest
+        name: CICD
 
-        variables:
-        REPOSITORY_URL: $AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com
-        REGION: us-east-1
-        DOCKER_HOST: tcp://docker:2375
-        DOCKER_DRIVER: overlay2
-        DOCKER_TLS_CERTDIR: ""
-        IMAGE_TAG: $CI_PIPELINE_IID
-
-        services:
-        - docker:dind
-
-        before_script:
-        - apk add --no-cache curl jq python3 py3-pip
-        - pip install awscli
-        - aws ecr get-login-password --region "${REGION}"| docker login --username AWS --password-stdin $REPOSITORY_URL 
-
-        stages:
-        - build
-        - deploy
-
+        on:
+        push:
+        branches: [main]
+        jobs:
         build:
-        stage: build
-        script:
-        - echo "Building image..."
-        - docker build -t $REPOSITORY_URL/$ECR_REPO:latest .
-        - echo "Tagging image..."
-        - docker tag $REPOSITORY_URL/$ECR_REPO:latest $REPOSITORY_URL/$ECR_REPO:$IMAGE_TAG
-        - echo "Pushing image..."
-        - docker push $REPOSITORY_URL/$ECR_REPO:latest
-        - docker push $REPOSITORY_URL/$ECR_REPO:$IMAGE_TAG
-        only:
-        - main
-
-        deploy:  
-        stage: deploy
-
-        before_script:
-        - mkdir -p ~/.ssh
-        - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
-        - chmod 600 ~/.ssh/id_rsa
-        - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
-        - eval "$(ssh-agent -s)"
-        - ssh-add ~/.ssh/id_rsa
-
-        script:
-        - ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no $EC2_USER@$EC2_INSTANCE_IP "docker stop demo-python || true && docker rm demo-python || true"
-        - ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no $EC2_USER@$EC2_INSTANCE_IP "aws ecr get-login-password --region "${REGION}"| docker login --username AWS --password-stdin $REPOSITORY_URL"
-        - ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no $EC2_USER@$EC2_INSTANCE_IP "docker pull $REPOSITORY_URL/$ECR_REPO:latest"
-        - ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no $EC2_USER@$EC2_INSTANCE_IP "docker run -d -p 8081:8081 --name demo-python $REPOSITORY_URL/$ECR_REPO:latest"
+        runs-on: [ubuntu-latest]
+        steps:
+        - name: Checkout source
+          uses: actions/checkout@v3
+        - name: Login to docker hub
+          run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }} 
+        - name: Build docker image
+          run: docker build -t mathimohamed/pipeline-cicd .
+        - name: Publish image to docker hub
+          run: docker push mathimohamed/pipeline-cicd:latest
         
-
-        
+        deploy:
+        needs: build
+        runs-on: [aws-ec2]
+        steps:
+       - name: Pull image from docker hub
+         run: docker pull mathimohamed/pipeline-cicd:latest
+       - name: Delete old container
+         run: docker rm -f pipeline-cicd-container
+       - name: Run docker container
+         run: docker run -d -p 3000:3000 --name pipeline-cicd-container mathimohamed/pipeline-cicd
